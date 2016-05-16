@@ -1,0 +1,2 @@
+# lof
+local outlier factor
