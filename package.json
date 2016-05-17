@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "babel src -d lib",
+    "watch": "babel src --watch -d lib",
     "prepublish": "npm test && npm run build",
     "test": "mocha --compilers js:babel-register --recursive test"
   },
