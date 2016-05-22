@@ -30,6 +30,7 @@
     "mocha": "2.4.5"
   },
   "dependencies": {
+    "euclidean-distance": "1.0.0",
     "lodash": "4.12.0"
   }
 }

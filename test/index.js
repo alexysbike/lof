@@ -1,50 +1,7 @@
 import assert from "assert";
-import lof, {euclideanDistance, knn, lrd} from "../src";
+import lof, {knn, kd} from "../src";
 
-describe("euclideanDistance", () => {
-    it("should return distance of 2 points (1d)", () => {
-        const dataset = [
-            // p1, p2, distance
-            [[0], [1], 1],
-            [[-1], [1], 2],
-            [[0], [10], 10],
-            [[-5], [5], 10],
-            [[0], [0], 0],
-            [[1], [1], 0]
-        ];
-
-        for (const [p1, p2, distance] of dataset) {
-            assert.strictEqual(euclideanDistance(p1, p2), distance);
-        }
-    });
-    it("should return distance of 2 points (2d)", () => {
-        const dataset = [
-            // p1, p2, distance
-            [[0,0], [0,1], 1],
-            [[0,0], [0,10], 10],
-            [[0,0], [3,4], 5],
-            [[-3,-4], [3,4], 10],
-            [[10, 20], [10, 100], 80]
-        ];
-
-        for (const [p1, p2, distance] of dataset) {
-            assert.strictEqual(euclideanDistance(p1, p2), distance);
-        }
-    });
-    it("should return distance of 2 points (3d)", () => {
-        const dataset = [
-            // p1, p2, distance
-            [[0,0,0], [0,1,0], 1],
-            [[1,1,1], [2,2,2], Math.sqrt(3)],
-            [[-5,-5,-5], [5,5,5], Math.sqrt(3) * 10]
-        ];
-
-        for (const [p1, p2, distance] of dataset) {
-            // nearly equals
-            assert.ok(Math.abs(euclideanDistance(p1, p2) - distance) < 0.00000001);
-        }
-    });
-});
+const nearlyEqual = (a, b) => Math.abs(a - b) < 0.00000001;
 
 describe("knn", () => {
     it("returning data size should be k", () => {
@@ -79,20 +36,39 @@ describe("knn", () => {
     });
 });
 
-describe("lrd", () => {
+describe("kd", () => {
     it("should returns max distance of k-nearest-neighbors", () => {
-        const dataset = [[0],[3.2],[3.3],[1],[2],[3],[3.1],[4],[5]];
-
-        assert.strictEqual(lof(3, dataset));
+        const testDataset = [{
+            k: 3,
+            dataset: [[0],[3.2],[3.3],[1],[2],[3],[3.1],[4],[5]],
+            sourceIndex: 0,
+            // nearest point of [0] is [1],[2],[3]
+            expected: 3
+        }, {
+            k: 2,
+            dataset: [[0],[3.2],[3.3],[1],[2],[3],[3.1],[4],[5]],
+            sourceIndex: 7,
+            // nearest point of [4] is [3.3], [3.2]
+            expected: 0.8
+        }, {
+            k: 1,
+            dataset: [[0],[3.2],[3.3],[1],[2],[3],[3.1],[4],[5]],
+            sourceIndex: 8,
+            // nearest point of [5] is [4]
+            expected: 1
+        }];
+        for (const {k, dataset, sourceIndex, expected} of testDataset) {
+            assert.ok(nearlyEqual(kd(k, dataset, sourceIndex), expected));
+        };
     });
 });
 
-describe("lof function", () => {
-    it("should return anomaly values of dataset (1d)", () => {
-        const k = 3;
-        const dataset = [1,2,1,0,0,1,0,-1,-1,0,2,-1,5,-2,1,0];
-
-        for (const i of dataset.keys()) {
-        }
-    });
-});
+// describe("lof function", () => {
+//     it("should return anomaly values of dataset (1d)", () => {
+//         const k = 3;
+//         const dataset = [1,2,1,0,0,1,0,-1,-1,0,2,-1,5,-2,1,0];
+//
+//         for (const i of dataset.keys()) {
+//         }
+//     });
+// });
