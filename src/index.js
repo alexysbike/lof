@@ -29,14 +29,24 @@ export const lrd = (k, dataset, pIndex) => {
     const sigmaRd = knn(k, dataset, pIndex)
         .map(([oIndex, distance]) => rd(k, dataset, pIndex, oIndex))
         .reduce((d1, d2) => d1 + d2);
-    kd(k, dataset, pIndex) / sigmaRd(k, dataset, pIndex);
+    return kd(k, dataset, pIndex) / sigmaRd;
 };
 
 // Local Outlier Factor
 export const lof = (k, dataset, pIndex) => {
+    console.log(
+      knn(k, dataset, pIndex)
+        .map(([oIndex]) => {
+          console.log(lrd(k, dataset, oIndex));
+          console.log(lrd(k, dataset, pIndex));
+          return lrd(k, dataset, oIndex) / lrd(k, dataset, pIndex)
+        })
+    );
     const sigmaLrdFraction = knn(k, dataset, pIndex)
         .map(([oIndex]) => lrd(k, dataset, oIndex) / lrd(k, dataset, pIndex))
         .reduce((d1, d2) => d1 + d2);
+    console.log(sigmaLrdFraction);
+    console.log(kd(k, dataset, pIndex));
     return sigmaLrdFraction / kd(k, dataset, pIndex);
 };
 
