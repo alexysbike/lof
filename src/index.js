@@ -1,13 +1,13 @@
 // http://www.dbs.ifi.lmu.de/Publikationen/Papers/LOF.pdf
 
-import euclideanDistance from "euclidean-distance";
+import manhattan from "manhattan";
 import {zip, sum} from "lodash";
 
 // k-Nearest Neighbors (naive)
 export const knn = (k, dataset, pIndex) => {
     return dataset
         // calculate the distance from selected index to the others
-        .map((data, index) => [index, euclideanDistance(data, dataset[pIndex])])
+        .map((data, index) => [index, manhattan(data, dataset[pIndex])])
         // filter the self point
         .filter(([index, distance]) => index !== pIndex)
         // sort by nearest
@@ -16,7 +16,7 @@ export const knn = (k, dataset, pIndex) => {
         .slice(0, k);
 };
 
-// k-distance
+// distanceToKthNearestNeighbor
 export const kd = (k, dataset, pIndex) => {
     const kNeighbors = knn(k, dataset, pIndex);
     const [index, distance] = kNeighbors.reduce((acc, dis) => acc[1] > dis[1] ? acc : dis);
@@ -27,11 +27,11 @@ export const kd = (k, dataset, pIndex) => {
 // Reachability Distance of point p and point o (used by lrd only)
 export const rd = (k, dataset, pIndex, oIndex) => {
     // getting the bigger between neighbors of current index and  distance between selected index and current index
-    return Math.max(kd(k, dataset, oIndex), euclideanDistance(dataset[pIndex], dataset[oIndex]));
+    return Math.max(kd(k, dataset, oIndex), manhattan(dataset[pIndex], dataset[oIndex]));
 };
 
 const sigmaRdCalc = (nearestArray, k, dataset, pIndex) => nearestArray
-// reachDistance: getting the max value between the Kth distance and the distance between selected index and current index for each item
+  // reachDistance: getting the max value between the Kth distance and the distance between selected index and current index for each item
   .map(([oIndex, distance]) => rd(k, dataset, pIndex, oIndex))
   // getting the sum of reachDistances
   .reduce((d1, d2) => d1 + d2);
@@ -57,7 +57,7 @@ export const lof = (k, dataset, pIndex) => {
     const sigmaLrdFraction = nearestArray
       .map(([oIndex]) => lrd(k, dataset, oIndex))
       .reduce((d1, d2) => d1 + d2);
-    return (sigmaLrdFraction * sigmaRdCalc(nearestArray, k, dataset, pIndex)) / nearestArray.length * nearestArray.length;
+    return (sigmaLrdFraction * sigmaRdCalc(nearestArray, k, dataset, pIndex)) / (nearestArray.length * nearestArray.length);
 };
 
 export default lof;
