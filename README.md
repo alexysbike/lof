@@ -1,15 +1,18 @@
-# lof [![Build Status](https://travis-ci.org/airtoxin/lof.svg?branch=master)](https://travis-ci.org/airtoxin/lof) [![npm version](https://badge.fury.io/js/lof.svg)](http://badge.fury.io/js/lof)
-local outlier factor
-
-# Work In Progress
+# Local Outlier Factor (lof) 
+Local Outlier Factor 
 
 ## Install
 
-~~`$ npm install lof`~~
+`$ npm install lof`
 
 ## Usage
 
 ```js
+const lof = require('lof');
+const dataset = [[3, 4], [5, 3], [2, 2], [5, 4]];
+console.log(lof(2, dataset, 0));
+// 0.9500365780630926
 ```
 
 ## API
+* lof(k, dataset, index, normalize = true, toMercator = false)

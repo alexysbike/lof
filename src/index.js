@@ -63,8 +63,8 @@ export const lrd = (k, dataset, pIndex) => {
 };
 
 // Local Outlier Factor
-export const lof = (k, rawDataset, pIndex, normalize = true) => {
-    const pointDataset = toPoint(rawDataset);
+export const lof = (k, rawDataset, pIndex, normalize = true, toMercator = false) => {
+    const pointDataset = !toMercator ? rawDataset : toPoint(rawDataset);
     const dataset = !normalize ? pointDataset : normalizeDataset(pointDataset);
     const nearestArray = knn(k, dataset, pIndex);
     const sigmaLrdFraction = nearestArray
