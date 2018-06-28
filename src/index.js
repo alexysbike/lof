@@ -1,4 +1,5 @@
 // http://www.dbs.ifi.lmu.de/Publikationen/Papers/LOF.pdf
+// v0.1.2
 import euclideanDistance from "euclidean-distance";
 import normalize from 'array-normalize';
 import merc from 'mercator-projection';
